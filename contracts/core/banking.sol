@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import "../AkapzTokenFlatten.sol";
+import "../tokens/AkapzToken.sol";
 import "../wallets/AcapzFoundersWallet.sol";
 
 contract Banking {
