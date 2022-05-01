@@ -9,7 +9,7 @@ contract Staking is Ownable, IStakeable {
 
     using SafeMath for uint256;
 
-    BaseERC20Token _baseStakingToken;
+    address _baseStakingToken;
     /// @notice equivalent to 0.5% per hour
     uint256 internal rewardPerHour = 5000;
     /// @notice reward will increment by 0.05% per day staked
@@ -36,6 +36,7 @@ contract Staking is Ownable, IStakeable {
         uint256 commitmentExpiry;
         uint256 commitedOn;
         bytes32 Signature;
+        uint256 claimable;
     }
 
     /// @notice struct StakeHolder is stakeholder information
@@ -43,6 +44,15 @@ contract Staking is Ownable, IStakeable {
     struct StakeHolder {
         address account;
         Stake[] address_stakes;
+    }
+
+    /**
+   * @notice
+     * StakingSummary is a struct that is used to contain all stakes performed by a certain account
+     */
+    struct StakingSummary{
+        uint256 total_amount;
+        Stake[] stakes;
     }
 
     /**
@@ -98,9 +108,12 @@ contract Staking is Ownable, IStakeable {
             index = _addStakeholder(msg.sender);
         }
 
+
+
         // @notice Use the index to push a new Stake
         // @notice push a newly created Stake with the current block timestamp.
-        stakeholders[index].address_stakes.push(Stake(msg.sender, _amount, timestamp));
+        stakeholders[index].address_stakes.push(Stake(msg.sender, _amount, timestamp,0));
+
         // Emit an event that the stake has occured
         emit Staked(msg.sender, _amount, index,timestamp);
     }
@@ -117,20 +130,6 @@ contract Staking is Ownable, IStakeable {
         return false;
     }
 
-    function stake(uint256 _amount) public {
-        // @notice Make sure staker actually is good for it
-        require(_amount < _balances[msg.sender], "DevToken: Cannot stake more than you own");
-
-        _stake(_amount);
-        // @notice Burn the amount of tokens on the sender
-        _baseStakingToken._burn(msg.sender, _amount);
-    }
-
-    function withdraw(uint256 _amount, uint256 stakeIndex) public onlyStaker(stakeIndex) {
-        uint256 amount_to_mint = _withdrawStake(amount, stake_index);
-        // Return staked tokens to user
-        _mint(msg.sender, amount_to_mint);
-    }
 
     modifier onlyStaker(uint256 stakeIndex) {
         require(msg.sender == stakeholders[stakeIndex].account, "does not own this stake");
@@ -177,6 +176,26 @@ contract Staking is Ownable, IStakeable {
         }
 
         return 0;
+    }
+
+    /**
+    * @notice
+     * hasStake is used to check if a account has stakes and the total amount along with all the seperate stakes
+     */
+    function hasStake(address _staker) public view returns(StakingSummary memory){
+        // totalStakeAmount is used to count total staked amount of the address
+        uint256 totalStakeAmount;
+        // Keep a summary in memory since we need to calculate this
+        StakingSummary memory summary = StakingSummary(0, stakeholders[stakes[_staker]].address_stakes);
+        // Itterate all stakes and grab amount of stakes
+        for (uint256 s = 0; s < summary.stakes.length; s += 1){
+            uint256 availableReward = calculateStakeReward(summary.stakes[s]);
+            summary.stakes[s].claimable = availableReward;
+            totalStakeAmount = totalStakeAmount+summary.stakes[s].amount;
+        }
+        // Assign calculate amount to summary
+        summary.total_amount = totalStakeAmount;
+        return summary;
     }
 
 }
