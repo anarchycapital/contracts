@@ -35,7 +35,7 @@ contract BaseERC20Token is Context, Ownable, IERC20, IERC20Metadata {
 
 
     /// @dev we use a struct for the base token parameters to not overflow the maximum params
-    constructor(BaseTokenParams params) {
+    constructor(BaseTokenParams memory params) {
 
         _name = params.name;
         _symbol = params.symbol;

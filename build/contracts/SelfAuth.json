@@ -1,0 +1,335 @@
+{
+  "contractName": "SelfAuth",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/core/selfAuth.sol\":\"SelfAuth\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/core/selfAuth.sol\":{\"keccak256\":\"0xa54a1663375acf254b69c095f25d434ed0605be5660974962dc38c622cd12486\",\"license\":\"LGPL-3.0-only\",\"urls\":[\"bzz-raw://6ca123205299cbad70d505f67d97d3071cb1fb2c95e798c02ceed1f8ff522073\",\"dweb:/ipfs/Qmf2KLiTb6KALux8i5NAKrs5WBLBkSJrh3bLS4SbvfY3Gj\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212202a3324f01b2e496e3f3927ecd424b699d5afafad4ea2a59c87e4ccbbcbab2f5a64736f6c634300080d0033",
+  "deployedBytecode": "0x6080604052600080fdfea26469706673582212202a3324f01b2e496e3f3927ecd424b699d5afafad4ea2a59c87e4ccbbcbab2f5a64736f6c634300080d0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "67:277:68:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "67:277:68:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: LGPL-3.0-only\npragma solidity ^0.8.2;\n\ncontract SelfAuth {\n    function requireSelfCall() private view {\n        require(msg.sender == address(this), \"unauthorized\");\n    }\n\n    modifier authorized() {\n        // This is a function call as it minimized the bytecode size\n        requireSelfCall();\n        _;\n    }\n}",
+  "sourcePath": "/Users/nicolascloutier/GolandProjects/contracts/contracts/core/selfAuth.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/core/selfAuth.sol",
+    "exportedSymbols": {
+      "SelfAuth": [
+        11426
+      ]
+    },
+    "id": 11427,
+    "license": "LGPL-3.0-only",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 11403,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".2"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "42:23:68"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "SelfAuth",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 11426,
+        "linearizedBaseContracts": [
+          11426
+        ],
+        "name": "SelfAuth",
+        "nameLocation": "76:8:68",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 11417,
+              "nodeType": "Block",
+              "src": "131:69:68",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 11413,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "expression": {
+                            "id": 11407,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 4294967281,
+                            "src": "149:3:68",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 11408,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "sender",
+                          "nodeType": "MemberAccess",
+                          "src": "149:10:68",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "==",
+                        "rightExpression": {
+                          "arguments": [
+                            {
+                              "id": 11411,
+                              "name": "this",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 4294967268,
+                              "src": "171:4:68",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_contract$_SelfAuth_$11426",
+                                "typeString": "contract SelfAuth"
+                              }
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": [
+                              {
+                                "typeIdentifier": "t_contract$_SelfAuth_$11426",
+                                "typeString": "contract SelfAuth"
+                              }
+                            ],
+                            "id": 11410,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "lValueRequested": false,
+                            "nodeType": "ElementaryTypeNameExpression",
+                            "src": "163:7:68",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_type$_t_address_$",
+                              "typeString": "type(address)"
+                            },
+                            "typeName": {
+                              "id": 11409,
+                              "name": "address",
+                              "nodeType": "ElementaryTypeName",
+                              "src": "163:7:68",
+                              "typeDescriptions": {}
+                            }
+                          },
+                          "id": 11412,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "kind": "typeConversion",
+                          "lValueRequested": false,
+                          "names": [],
+                          "nodeType": "FunctionCall",
+                          "src": "163:13:68",
+                          "tryCall": false,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "src": "149:27:68",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "hexValue": "756e617574686f72697a6564",
+                        "id": 11414,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "178:14:68",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_926a1b84b861d31f2d45224162461e1d5ff4377725d977d8f792bb84825a0348",
+                          "typeString": "literal_string \"unauthorized\""
+                        },
+                        "value": "unauthorized"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_926a1b84b861d31f2d45224162461e1d5ff4377725d977d8f792bb84825a0348",
+                          "typeString": "literal_string \"unauthorized\""
+                        }
+                      ],
+                      "id": 11406,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
+                      "referencedDeclaration": 4294967278,
+                      "src": "141:7:68",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 11415,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "141:52:68",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11416,
+                  "nodeType": "ExpressionStatement",
+                  "src": "141:52:68"
+                }
+              ]
+            },
+            "id": 11418,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "requireSelfCall",
+            "nameLocation": "100:15:68",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 11404,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "115:2:68"
+            },
+            "returnParameters": {
+              "id": 11405,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "131:0:68"
+            },
+            "scope": 11426,
+            "src": "91:109:68",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "private"
+          },
+          {
+            "body": {
+              "id": 11424,
+              "nodeType": "Block",
+              "src": "228:114:68",
+              "statements": [
+                {
+                  "expression": {
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "id": 11420,
+                      "name": "requireSelfCall",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 11418,
+                      "src": "307:15:68",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_internal_view$__$returns$__$",
+                        "typeString": "function () view"
+                      }
+                    },
+                    "id": 11421,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "307:17:68",
+                    "tryCall": false,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 11422,
+                  "nodeType": "ExpressionStatement",
+                  "src": "307:17:68"
+                },
+                {
+                  "id": 11423,
+                  "nodeType": "PlaceholderStatement",
+                  "src": "334:1:68"
+                }
+              ]
+            },
+            "id": 11425,
+            "name": "authorized",
+            "nameLocation": "215:10:68",
+            "nodeType": "ModifierDefinition",
+            "parameters": {
+              "id": 11419,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "225:2:68"
+            },
+            "src": "206:136:68",
+            "virtual": false,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 11427,
+        "src": "67:277:68",
+        "usedErrors": []
+      }
+    ],
+    "src": "42:302:68"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.13+commit.abaa5c0e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.7",
+  "updatedAt": "2022-05-01T15:48:00.334Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

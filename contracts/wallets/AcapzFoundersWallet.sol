@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/cryptography/draft-EIP712.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../core/secureTokenTransfer.sol";
-import "../AkapzTokenFlatten.sol";
+import "../tokens/AkapzToken.sol";
 contract AcapzFoundersWallet is SecureTokenTransfer, Context, Ownable {
     
 

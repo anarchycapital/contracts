@@ -9,8 +9,8 @@ contract Migrations is Ownable {
 
 
 
-  constructor(address owner_) {
-    _owner = owner_;
+  constructor() {
+    _owner = msg.sender;
   }
 
   function setCompleted(uint completed) public onlyOwner {

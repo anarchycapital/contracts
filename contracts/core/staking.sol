@@ -1,11 +1,11 @@
-pragma solidity ^0.8.0;
+//SPDX-License-Identifier: Unlicense
+pragma solidity >0.4.23 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "./BaseERC20Token.sol";
 import "./interfaces/IStakeable.sol";
 
-contract Staking is Ownable, IStakeable {
+contract Staking {
 
     using SafeMath for uint256;
 
@@ -35,7 +35,6 @@ contract Staking is Ownable, IStakeable {
         /// @notice when the commitment expires
         uint256 commitmentExpiry;
         uint256 commitedOn;
-        bytes32 Signature;
         uint256 claimable;
     }
 
@@ -74,13 +73,17 @@ contract Staking is Ownable, IStakeable {
     /**
    * @notice _addStakeholder takes care of adding a stakeholder to the stakeholders array
      */
+
+   constructor() {}
+
+
     function _addStakeholder(address staker) internal returns (uint256){
         // @notice Push a empty item to the Array to make space for our new stakeholder
         stakeholders.push();
         // @notice Calculate the index of the last item in the array by Len-1
         uint256 userIndex = stakeholders.length - 1;
         // @notice Assign the address to the new index
-        stakeholders[userIndex].user = staker;
+        stakeholders[userIndex].account = staker;
         // @notice Add index to the stakeHolders
         stakes[staker] = userIndex;
         return userIndex;
@@ -110,19 +113,19 @@ contract Staking is Ownable, IStakeable {
 
 
 
-        // @notice Use the index to push a new Stake
+        // @notice Use the index to push a new Stakes
         // @notice push a newly created Stake with the current block timestamp.
-        stakeholders[index].address_stakes.push(Stake(msg.sender, _amount, timestamp,0));
+        stakeholders[index].address_stakes.push(Stake(msg.sender, _amount, timestamp,0,0,0,0));
 
         // Emit an event that the stake has occured
         emit Staked(msg.sender, _amount, index,timestamp);
     }
 
-    function _beforeStake(address memory token, address to, uint256 amount) internal virtual {
+    function _beforeStake(address token, address to, uint256 amount) internal virtual {
 
     }
 
-    function _afterStake(address memory token, address to, uint256 amount) internal virtual {
+    function _afterStake(address  token, address to, uint256 amount) internal virtual {
 
     }
 
@@ -137,11 +140,11 @@ contract Staking is Ownable, IStakeable {
     }
 
     function _calculateStakeRewards(Stake memory currentStake) internal view returns(uint256) {
-        return (((block.timestamp - _current_stake.since) / 1 hours) * _current_stake.amount) / rewardPerHour;
+        return (((block.timestamp - currentStake.since) / 1 hours) * currentStake.amount) / rewardPerHour;
     }
 
-    function _calculateCommitmentBonus(Stake memory currentStake) internal view returns(uint256) {
-        return (((block.timestamp - _current_stake.since) / 1 hours) * _current_stake.amount) / commitmentBonusIncentive;
+    function _calculateCommitmentBonus(Stake memory current_stake) internal view returns(uint256) {
+        return (((block.timestamp - current_stake.since) / 1 hours) * current_stake.amount) / commitmentBonusIncentive;
     }
 
     function commitmentNotExpired(Stake memory currentStake) internal view returns(bool) {
@@ -164,15 +167,15 @@ contract Staking is Ownable, IStakeable {
     /// rules are (OR) :
     /// - if user commited, commitment is not respected (not expired)
     /// - if user stakes less than 24 hours ago and withdraw
-    function _calculatePenalties(Stake memory currentStake) internal view returns(uint256) {
-        if (commitmentNotExpired(currentStake) && currentStake.commitmentSeconds > 0 && ((since + (24 * 1 hours)) < block.timestamp)) {
-            return (((block.timestamp - _current_stake.since) / 1 hours) * _current_stake.amount) / rewardPenaltyPerWithdraw;
+    function _calculatePenalties(Stake memory current_stake) internal view returns(uint256) {
+        if (commitmentNotExpired(current_stake) && current_stake.commitmentSeconds > 0 && ((current_stake.since + (24 * 1 hours)) < block.timestamp)) {
+            return (((block.timestamp - current_stake.since) / 1 hours) * current_stake.amount) / rewardPenaltyPerWithdraw;
         }
-        if(!commitmentNotExpired(currentStake) && currentStake.commitmentSeconds > 0 && ((since + (24 * 1 hours)) > block.timestamp)) {
+        if(!commitmentNotExpired(current_stake) && current_stake.commitmentSeconds > 0 && ((current_stake.since + (24 * 1 hours)) > block.timestamp)) {
             return 0;
         }
-        if ((since + (24 * 1 hours)) < block.timestamp) {
-            return (((block.timestamp - _current_stake.since) / 1 hours) * _current_stake.amount) / rewardPenaltyPerWithdraw;
+        if ((current_stake.since + (24 * 1 hours)) < block.timestamp) {
+            return (((block.timestamp - current_stake.since) / 1 hours) * current_stake.amount) / rewardPenaltyPerWithdraw;
         }
 
         return 0;
@@ -189,7 +192,7 @@ contract Staking is Ownable, IStakeable {
         StakingSummary memory summary = StakingSummary(0, stakeholders[stakes[_staker]].address_stakes);
         // Itterate all stakes and grab amount of stakes
         for (uint256 s = 0; s < summary.stakes.length; s += 1){
-            uint256 availableReward = calculateStakeReward(summary.stakes[s]);
+            uint256 availableReward = calculateRewards(summary.stakes[s]);
             summary.stakes[s].claimable = availableReward;
             totalStakeAmount = totalStakeAmount+summary.stakes[s].amount;
         }
@@ -198,4 +201,34 @@ contract Staking is Ownable, IStakeable {
         return summary;
     }
 
+    /**
+    * @notice
+     * withdrawStake takes in an amount and a index of the stake and will remove tokens from that stake
+     * Notice index of the stake is the users stake counter, starting at 0 for the first stake
+     * Will return the amount to MINT onto the acount
+     * Will also calculateStakeReward and reset timer
+    */
+    function _withdrawStake(uint256 amount, uint256 index) internal returns(uint256){
+        // Grab user_index which is the index to use to grab the Stake[]
+        uint256 user_index = stakes[msg.sender];
+        Stake memory current_stake = stakeholders[user_index].address_stakes[index];
+        require(current_stake.amount >= amount, "Staking: Cannot withdraw more than you have staked");
+
+        // Calculate available Reward first before we start modifying data
+        uint256 reward = calculateRewards(current_stake);
+        // Remove by subtracting the money unstaked
+        current_stake.amount = current_stake.amount - amount;
+        // If stake is empty, 0, then remove it from the array of stakes
+        if(current_stake.amount == 0){
+            delete stakeholders[user_index].address_stakes[index];
+        }else {
+            // If not empty then replace the value of it
+            stakeholders[user_index].address_stakes[index].amount = current_stake.amount;
+            // Reset timer of stake
+            stakeholders[user_index].address_stakes[index].since = block.timestamp;
+        }
+
+        return amount+reward;
+
+    }
 }

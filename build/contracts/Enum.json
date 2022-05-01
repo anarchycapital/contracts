@@ -1,0 +1,103 @@
+{
+  "contractName": "Enum",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.13+commit.abaa5c0e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/core/enums.sol\":\"Enum\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/core/enums.sol\":{\"keccak256\":\"0x65bd21d3f54251e6cd173c7355bf8441f4c58bb0ff24fb7ed0f00ada11526f1f\",\"license\":\"LGPL-3.0-only\",\"urls\":[\"bzz-raw://2a43e06dd504e053d7e2ae4e38c88b991e2661d9c816848cb4213219c6c44ca9\",\"dweb:/ipfs/QmYEtcZK4N1LPiBsN7WDEpSm4qPAHCeg3np13xgBYrsqjj\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220c91b757ea8db3290ec1996eb8754d543f9c0bf734d4823706c9bff6d91e086de64736f6c634300080d0033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220c91b757ea8db3290ec1996eb8754d543f9c0bf734d4823706c9bff6d91e086de64736f6c634300080d0033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "75:59:63:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "75:59:63:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: LGPL-3.0-only\npragma solidity >=0.7.0 <0.9.0;\n\ncontract Enum {\n    enum Operation { Call, DelegateCall }\n}",
+  "sourcePath": "/Users/nicolascloutier/GolandProjects/contracts/contracts/core/enums.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/core/enums.sol",
+    "exportedSymbols": {
+      "Enum": [
+        11019
+      ]
+    },
+    "id": 11020,
+    "license": "LGPL-3.0-only",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 11015,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.7",
+          ".0",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "42:31:63"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Enum",
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 11019,
+        "linearizedBaseContracts": [
+          11019
+        ],
+        "name": "Enum",
+        "nameLocation": "84:4:63",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "Enum.Operation",
+            "id": 11018,
+            "members": [
+              {
+                "id": 11016,
+                "name": "Call",
+                "nameLocation": "112:4:63",
+                "nodeType": "EnumValue",
+                "src": "112:4:63"
+              },
+              {
+                "id": 11017,
+                "name": "DelegateCall",
+                "nameLocation": "118:12:63",
+                "nodeType": "EnumValue",
+                "src": "118:12:63"
+              }
+            ],
+            "name": "Operation",
+            "nameLocation": "100:9:63",
+            "nodeType": "EnumDefinition",
+            "src": "95:37:63"
+          }
+        ],
+        "scope": 11020,
+        "src": "75:59:63",
+        "usedErrors": []
+      }
+    ],
+    "src": "42:92:63"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.13+commit.abaa5c0e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.7",
+  "updatedAt": "2022-05-01T15:48:00.326Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}
