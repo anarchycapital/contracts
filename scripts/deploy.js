@@ -38,15 +38,26 @@ async function main() {
         params.token.cap,
       ],
       {
-        kind: "uups",
         initializer: "initialize",
       }
     );
 
     await akapzToken.deployed();
 
+    const Staking = await ethers.getContractFactory("StakingToken");
+    const StakingToken = await upgrades.deployProxy(
+        Staking,
+        ["Akapz Staking Token", "AKST", 1000000],
+        {
+       kind:"uups"}
+    );
+
+    await StakingToken.deployed();
+
+
 
     console.log("deployed to: ", akapzToken.address);
+    console.log("staking address: ", StakingToken.address);
   } catch (err) {
     console.error(err);
   }

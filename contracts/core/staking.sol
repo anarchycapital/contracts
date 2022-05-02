@@ -1,44 +1,43 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity >0.4.23 <0.9.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./interfaces/IStakeable.sol";
 
-contract Staking {
+contract Staking is Initializable {
 
     using SafeMath for uint256;
 
     address _baseStakingToken;
-    /// @notice equivalent to 0.5% per hour
-    uint256 internal rewardPerHour = 5000;
-    /// @notice reward will increment by 0.05% per day staked
-    uint256 internal rewardIncrementsPerDay = 500;
+    /// @dev equivalent to 0.5% per hour
+    uint256 internal constant rewardPerHour = 5000;
+    /// @dev reward will increment by 0.05% per day staked
+    uint256 internal constant rewardIncrementsPerDay = 500;
 
-    /// @notice a small penalty of 0.05% (one day) will happen if withdrawn before 24h or before commitment expires
-    /// @notice to help prevent bot impact on the stakes
-    uint256 internal rewardPenaltyPerWithdraw = 500;
+    /// @dev a small penalty of 0.05% (one day) will happen if withdrawn before 24h or before commitment expires
+    /// @dev to help prevent bot impact on the stakes
+    uint256 internal constant rewardPenaltyPerWithdraw = 500;
 
-    /// @notice if user is commiting to a minimum of days to stake it will get a bonus of 0.2% per hour
-    uint256 internal commitmentBonusIncentive = 2000;
+    /// @dev if user is commiting to a minimum of days to stake it will get a bonus of 0.2% per hour
+    uint256 internal constant commitmentBonusIncentive = 2000;
 
-    /// @notice if less than treshold = penalty if more = no penalty
-    uint256 internal rewardPenaltyThresholdSeconds = 3600 * 24;
+    /// @dev if less than treshold = penalty if more = no penalty
+    uint256 internal constant rewardPenaltyThresholdSeconds = 3600 * 24;
 
-    /// @notice struct Stake to hold stake information
+    /// @dev struct Stake to hold stake information
     struct Stake {
         address account;
         uint256 amount;
         uint256 since;
-        /// a user needs to commit to a minimum of days (calculated in seconds) for his staking cannot be less than 1
         uint256 commitmentSeconds;
-        /// @notice when the commitment expires
         uint256 commitmentExpiry;
         uint256 commitedOn;
         uint256 claimable;
     }
 
-    /// @notice struct StakeHolder is stakeholder information
+    /// @dev struct StakeHolder is stakeholder information
 
     struct StakeHolder {
         address account;
@@ -46,7 +45,7 @@ contract Staking {
     }
 
     /**
-   * @notice
+   * @dev
      * StakingSummary is a struct that is used to contain all stakes performed by a certain account
      */
     struct StakingSummary{
@@ -55,36 +54,40 @@ contract Staking {
     }
 
     /**
-   * @notice
+   * @dev
     *   This is a array where we store all Stakes that are performed on the Contract
     *   The stakes for each address are stored at a certain index, the index can be found using the stakes mapping
     */
     StakeHolder[] internal stakeholders;
     /**
-    * @notice
+    * @dev
     * stakes is used to keep track of the INDEX for the stakers in the stakes array
      */
     mapping(address => uint256) internal stakes;
     /**
-    * @notice Staked event is triggered whenever a user stakes tokens, address is indexed to make it filterable
+    * @dev Staked event is triggered whenever a user stakes tokens, address is indexed to make it filterable
      */
     event Staked(address indexed user, uint256 amount, uint256 index, uint256 timestamp);
 
     /**
-   * @notice _addStakeholder takes care of adding a stakeholder to the stakeholders array
+   * @dev _addStakeholder takes care of adding a stakeholder to the stakeholders array
      */
 
-   constructor() {}
+
+
+   function __Staking_Init() public initializer {
+       stakeholders.push();
+   }
 
 
     function _addStakeholder(address staker) internal returns (uint256){
-        // @notice Push a empty item to the Array to make space for our new stakeholder
+        // @dev Push a empty item to the Array to make space for our new stakeholder
         stakeholders.push();
-        // @notice Calculate the index of the last item in the array by Len-1
+        // @dev Calculate the index of the last item in the array by Len-1
         uint256 userIndex = stakeholders.length - 1;
-        // @notice Assign the address to the new index
+        // @dev Assign the address to the new index
         stakeholders[userIndex].account = staker;
-        // @notice Add index to the stakeHolders
+        // @dev Add index to the stakeHolders
         stakes[staker] = userIndex;
         return userIndex;
     }
@@ -99,11 +102,11 @@ contract Staking {
         require(_amount > 0, "Cannot stake nothing");
 
 
-        // @notice Mappings in solidity creates all values, but empty, so we can just check the address
+        // @dev Mappings in solidity creates all values, but empty, so we can just check the address
         uint256 index = stakes[msg.sender];
-        // @notice block.timestamp = timestamp of the current block in seconds since the epoch
+        // @dev block.timestamp = timestamp of the current block in seconds since the epoch
         uint256 timestamp = block.timestamp;
-        // @notice See if the staker already has a staked index or if its the first time
+        // @dev See if the staker already has a staked index or if its the first time
         if(index == 0){
             // This stakeholder stakes for the first time
             // We need to add him to the stakeHolders and also map it into the Index of the stakes
@@ -113,8 +116,8 @@ contract Staking {
 
 
 
-        // @notice Use the index to push a new Stakes
-        // @notice push a newly created Stake with the current block timestamp.
+        // @dev Use the index to push a new Stakes
+        // @dev push a newly created Stake with the current block timestamp.
         stakeholders[index].address_stakes.push(Stake(msg.sender, _amount, timestamp,0,0,0,0));
 
         // Emit an event that the stake has occured
@@ -163,7 +166,7 @@ contract Staking {
     }
 
 
-    /// @notice calculates penalties
+    /// @dev calculates penalties
     /// rules are (OR) :
     /// - if user commited, commitment is not respected (not expired)
     /// - if user stakes less than 24 hours ago and withdraw
@@ -182,7 +185,7 @@ contract Staking {
     }
 
     /**
-    * @notice
+    * @dev
      * hasStake is used to check if a account has stakes and the total amount along with all the seperate stakes
      */
     function hasStake(address _staker) public view returns(StakingSummary memory){
@@ -202,7 +205,7 @@ contract Staking {
     }
 
     /**
-    * @notice
+    * @dev
      * withdrawStake takes in an amount and a index of the stake and will remove tokens from that stake
      * Notice index of the stake is the users stake counter, starting at 0 for the first stake
      * Will return the amount to MINT onto the acount

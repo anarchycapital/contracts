@@ -9,10 +9,10 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20Pausable
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC20CappedUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "../core/staking.sol";
+import "../core/BaseERC20Token.sol";
 
 
-
-contract StakingToken is Initializable, ContextUpgradeable, UUPSUpgradeable, OwnableUpgradeable, Staking,ERC20BurnableUpgradeable{
+contract StakingToken is Initializable, ContextUpgradeable, UUPSUpgradeable, OwnableUpgradeable, ERC20Upgradeable, Staking {
 
     mapping(address => uint256) private _balances;
 
@@ -23,22 +23,25 @@ contract StakingToken is Initializable, ContextUpgradeable, UUPSUpgradeable, Own
     string private _name;
     string private _symbol;
     address private _owner;
+    uint8 private _decimals;
 
-    constructor() {}
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
 
     function initialize(string memory __name, string memory __symbol, uint256 __supply) initializer public  {
-        __Context_init_unchained();
-        __ERC20_init_unchained(__name, __symbol);
 
-        __ERC20Burnable_init_unchained();
+        __ERC20_init(__name, __symbol);
+        __Context_init_unchained();
+        __Ownable_init();
+        __UUPSUpgradeable_init();
         _owner = msg.sender;
         _totalSupply = __supply * 10 ** decimals();
+        _mint(msg.sender, _totalSupply);
+        __Staking_Init();
+        emit Transfer(address(0), msg.sender, _totalSupply);
 
     }
-
-
-
-
 
 
     function stake(uint256 _amount) public {
