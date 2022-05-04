@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity >0.4.23 <0.9.0;
+pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
@@ -39,7 +39,7 @@ ISwapRouter public swapRouter;
     string private _ipfsLogoUrl;
   
     uint8 private _decimals;
-    address public Akapz ;
+    address public Akapz;
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
 
     event Initialized(string name, address by, uint on);
