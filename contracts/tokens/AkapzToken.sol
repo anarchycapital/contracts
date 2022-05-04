@@ -72,13 +72,6 @@ contract AkapzToken is
         address owner_,
         uint256 cap_
     ) internal onlyInitializing {
-        /*       _totalSupply = 100000000 * 10 ** 18; // 100 million tokens available
-        _decimals = 18;
-        _totalBurned = 0;
-        _totalLocked = 0;
-        _owner = msg.sender;
-        _initializedParams = true;
-        mint(msg.sender, _totalSupply);*/
         __ERC20_init_unchained(name_, symbol_);
         __Pausable_init_unchained();
         __ERC20Burnable_init_unchained();
@@ -208,9 +201,6 @@ contract AkapzToken is
         _;
     }
 
-    /* function lockFunds(address transferFromAddr, uint256 amount, address toWallet, uint until) private onlyOwner dateAfterNow(until) enoughFunds(amount, forWallet) {
-
-    }*/
 
     modifier enoughFunds(uint256 amount, address wallet) {
         require(_balances[wallet] >= amount, "balance is not sufficient");
